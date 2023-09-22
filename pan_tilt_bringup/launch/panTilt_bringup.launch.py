@@ -22,10 +22,18 @@ def generate_launch_description():
                           'pitch_joint_name': LaunchConfiguration('pitch_joint_name')
                         }]
                         )
+    pan_tilt_control = Node(
+        package='pan_tilt_driver',
+        executable='pan_tilt_control',
+        name='pan_tilt_control',
+        output='screen'
+    )
+
     return LaunchDescription([
         port_name_arg,
         id_arg,
         yaw_joint_name_arg,
         pitch_joint_name_arg,
-        PanTiltDriver_Node
+        PanTiltDriver_Node,
+        pan_tilt_control
     ])

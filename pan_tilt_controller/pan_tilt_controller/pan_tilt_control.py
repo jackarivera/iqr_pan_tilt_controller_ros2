@@ -16,6 +16,7 @@ class pan_tilt_control_node(Node):
     def __init__(self):
         super().__init__('pan_tilt_control_node')
         self.publisher_ = self.create_publisher(PanTiltCmdDeg, 'pan_tilt_cmd_deg', 10)
+        self.joy_subscriber_ = self.create_subscription(Joy, 'joy', self.joy_callback, 10)
 
     def joy_callback(self, data):
         global pan_tilt_yaw, pan_tilt_pitch
@@ -57,9 +58,9 @@ class pan_tilt_control_node(Node):
           pan_tilt_yaw = -60
 
         command = PanTiltCmdDeg()
-        command.speed = 20.0
-        command.yaw = pan_tilt_yaw
-        command.pitch = pan_tilt_pitch
+        command.speed = 20
+        command.yaw = pan_tilt_yaw * 1.0
+        command.pitch = pan_tilt_pitch * 1.0
 
         self.publisher_.publish(command)
 
@@ -68,7 +69,6 @@ class pan_tilt_control_node(Node):
 def main(args=None):
   rclpy.init(args=args)
   node = pan_tilt_control_node()
-  rclpy.Subscriber("joy", Joy, node.joy_callback)
   try:
       node.get_logger().info("PanTilt Control Start")
       rclpy.spin(node)
